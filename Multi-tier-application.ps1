@@ -92,10 +92,10 @@ $nicVMweb = New-AzureRmNetworkInterface -ResourceGroupName $rgName -Location $lo
   -Name 'MyNic-Web' -PublicIpAddress $publicipvm1 -NetworkSecurityGroup $nsgfe -Subnet $vnet.Subnets[0]
 
 # Create a Web Server VM in the front-end subnet
-$vmConfig = New-AzureRmVMConfig -VMName 'MyVm-Web' -VMSize 'Standard_B1S' | `
+$vmConfig = New-AzureRmVMConfig -VMName 'MyVm-Web' -VMSize 'Standard_DS1_v2' | `
   Set-AzureRmVMOperatingSystem -Windows -ComputerName 'MyVm-Web' -Credential $cred | `
   Set-AzureRmVMSourceImage -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' `
-  -Skus '2008-R2-SP1' -Version latest | Add-AzureRmVMNetworkInterface -Id $nicVMweb.Id
+  -Skus '2016-Datacenter' -Version latest | Add-AzureRmVMNetworkInterface -Id $nicVMweb.Id
 
 $vmweb = New-AzureRmVM -ResourceGroupName $rgName -Location $location -VM $vmConfig
 

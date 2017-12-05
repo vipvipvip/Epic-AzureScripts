@@ -12,7 +12,7 @@ function Get-SQLVMConfiguration
         ComputerName = 'MyVm-Sql'
         PublisherName = 'MicrosoftSQLServer'
         Offer = 'SQL2016-WS2016'
-        Skus = 'Express'
+        Skus = 'SQLDEV'
         Version =  'latest'
         }
     return $config

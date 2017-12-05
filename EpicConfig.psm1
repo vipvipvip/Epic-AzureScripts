@@ -20,7 +20,7 @@ function Get-Configuration
 {
     $configuration = @{`
             ResourceGroupName = "Si3RG1"
-            Location = "eastus"
+            Location = "westus"
         }
     return $configuration
 }
