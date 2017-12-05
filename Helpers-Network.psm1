@@ -19,9 +19,9 @@ function Si3-New-Rule {
         [string] $Name,
         [string] $Description,
         [int] $Priority,
-        [int] $DestinationPortRange
+        [string] $DestinationPortRange
     )
-    if ($Name -eq ""  -or $Description -eq "" -or $DestinationPortRange -le 0)
+    if ($Name -eq ""  -or $Description -eq "" -or $DestinationPortRange -eq "")
     {
         throw 'Si3-Create-Rule() - One or more parameters to create the rule were not provided.'
     }
