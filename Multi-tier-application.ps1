@@ -24,16 +24,17 @@ $location = $Si3Config.Location
 # $cred = Get-Credential -Message "Enter a username and password for the virtual machine."
 
 # Create a resource group.
-# New-AzureRmResourceGroup -Name $rgName -Location $location
+New-AzureRmResourceGroup -Name $rgName -Location $location
 
 $fesubnet = Si3-New-Subnet "MySubnet-FrontEnd" "10.0.1.0/24"
 $besubnet = Si3-New-Subnet "MySubnet-BackEnd" "10.0.2.0/24"
+$vnet = Si3-New-Vnet $rgName 'MyVnet' '10.0.0.0/16' $location  @($fesubnet, $besubnet)
 
 # Create a virtual network with a front-end subnet and back-end subnet.
 # $fesubnet = New-AzureRmVirtualNetworkSubnetConfig -Name 'MySubnet-FrontEnd' -AddressPrefix '10.0.1.0/24'
 # $besubnet = New-AzureRmVirtualNetworkSubnetConfig -Name 'MySubnet-BackEnd' -AddressPrefix '10.0.2.0/24'
-$vnet = New-AzureRmVirtualNetwork -ResourceGroupName $rgName -Name 'MyVnet' -AddressPrefix '10.0.0.0/16' `
-  -Location $location -Subnet $fesubnet, $besubnet
+# $vnet = New-AzureRmVirtualNetwork -ResourceGroupName $rgName -Name 'MyVnet' -AddressPrefix '10.0.0.0/16' `
+#   -Location $location -Subnet $fesubnet, $besubnet
 
 # Create an NSG rule to allow HTTP traffic in from the Internet to the front-end subnet.
 $rule1 = Si3-New-Rule 'Allow-HTTP-All' 'Allow HTTP' 100 80
@@ -43,7 +44,7 @@ $rule1 = Si3-New-Rule 'Allow-HTTP-All' 'Allow HTTP' 100 80
 #   -DestinationAddressPrefix * -DestinationPortRange 80
 
 # Create an NSG rule to allow RDP traffic from the Internet to the front-end subnet.
-$rule2 = Si3-New-Rule 'Alllow-RDP-All' 'Allow RDP', 200, 3389
+$rule2 = Si3-New-Rule 'Alllow-RDP-All' 'Allow RDP' 200 3389
 # $rule2 = New-AzureRmNetworkSecurityRuleConfig -Name 'Allow-RDP-All' -Description "Allow RDP" `
 #   -Access Allow -Protocol Tcp -Direction Inbound -Priority 200 `
 #   -SourceAddressPrefix Internet -SourcePortRange * `
@@ -51,8 +52,9 @@ $rule2 = Si3-New-Rule 'Alllow-RDP-All' 'Allow RDP', 200, 3389
 
 
 # Create a network security group for the front-end subnet.
-$nsgfe = New-AzureRmNetworkSecurityGroup -ResourceGroupName $RgName -Location $location `
-  -Name 'MyNsg-FrontEnd' -SecurityRules $rule1,$rule2
+$nsgfe = Si3-New-NSG $rgName $location 'MyNsg-FrontEnd' @($rule1, $rule2)
+# $nsgfe = New-AzureRmNetworkSecurityGroup -ResourceGroupName $RgName -Location $location `
+#   -Name 'MyNsg-FrontEnd' -SecurityRules $rule1,$rule2
 
 # Associate the front-end NSG to the front-end subnet.
 Set-AzureRmVirtualNetworkSubnetConfig -VirtualNetwork $vnet -Name 'MySubnet-FrontEnd' `

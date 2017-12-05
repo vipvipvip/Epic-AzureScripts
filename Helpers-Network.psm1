@@ -31,3 +31,38 @@ function Si3-New-Rule {
     -SourceAddressPrefix Internet -SourcePortRange * `
     -DestinationAddressPrefix * -DestinationPortRange $DestinationPortRange
 }
+
+function Si3-New-Vnet {
+    
+        param(
+            [string] $ResourceGroupName,
+            [string] $Name,
+            [string] $AddressPrefix,
+            [string] $location,
+            [Microsoft.Azure.Commands.Network.Models.PSSubnet[]] $Subnet
+        )
+        if ($ResourceGroupName -eq "" -or $Name -eq ""  -or $AddressPrefix -eq "" -or $location -eq "" -or $Subnet.Length -lt 0)
+        {
+            throw 'Si3-Create-Vnet() - One or more parameters to create the vnet were not provided.'
+        }
+    
+        return New-AzureRmVirtualNetwork -ResourceGroupName $ResourceGroupName -Name $Name -AddressPrefix $AddressPrefix `
+        -Location $location -Subnet $Subnet
+}
+
+function Si3-New-NSG {
+    
+        param(
+            [string] $ResourceGroupName,
+            [string] $location,
+            [string] $Name,
+            [Microsoft.Azure.Commands.Network.Models.PSSecurityRule[]] $Rule
+        )
+        if ($ResourceGroupName -eq "" -or $Name -eq ""  -or $AddressPrefix -eq "" -or $location -eq "" -or $Subnet.Length -lt 0)
+        {
+            throw 'Si3-Create-Vnet() - One or more parameters to create the vnet were not provided.'
+        }
+        
+        return New-AzureRmNetworkSecurityGroup -ResourceGroupName $ResourceGroupName -Location $location `
+              -Name $Name -SecurityRules $Rule
+}
