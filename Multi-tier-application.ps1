@@ -37,14 +37,14 @@ $vnet = Si3-New-Vnet $rgName 'MyVnet' '10.0.0.0/16' $location  @($fesubnet, $bes
 #   -Location $location -Subnet $fesubnet, $besubnet
 
 # Create an NSG rule to allow HTTP traffic in from the Internet to the front-end subnet.
-$rule1 = Si3-New-Rule 'Allow-HTTP-All' 'Allow HTTP' 100 '80'
+$rule1 = Si3-New-Rule 'Allow-HTTP-All' 'Allow HTTP' 100 Internet '80'
 # $rule1 = New-AzureRmNetworkSecurityRuleConfig -Name 'Allow-HTTP-All' -Description 'Allow HTTP' `
 #   -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 `
 #   -SourceAddressPrefix Internet -SourcePortRange * `
 #   -DestinationAddressPrefix * -DestinationPortRange 80
 
 # Create an NSG rule to allow RDP traffic from the Internet to the front-end subnet.
-$rule2 = Si3-New-Rule 'Allow-RDP-All' 'Allow RDP' 200 '3389'
+$rule2 = Si3-New-Rule 'Allow-RDP-All' 'Allow RDP' 200 Internet  '3389'
 # $rule2 = New-AzureRmNetworkSecurityRuleConfig -Name 'Allow-RDP-All' -Description "Allow RDP" `
 #   -Access Allow -Protocol Tcp -Direction Inbound -Priority 200 `
 #   -SourceAddressPrefix Internet -SourcePortRange * `
@@ -61,14 +61,14 @@ Set-AzureRmVirtualNetworkSubnetConfig -VirtualNetwork $vnet -Name 'MySubnet-Fron
   -AddressPrefix '10.0.1.0/24' -NetworkSecurityGroup $nsgfe
 
 # Create an NSG rule to allow SQL traffic from the front-end subnet to the back-end subnet.
-$rule1 = Si3-New-Rule 'Allow-SQL-FrontEnd' 'Allow SQL' 100 '1433'
+$rule1 = Si3-New-Rule 'Allow-SQL-FrontEnd' 'Allow SQL' 100 10.0.1.0/24 '1433'
 # $rule1 = New-AzureRmNetworkSecurityRuleConfig -Name 'Allow-SQL-FrontEnd' -Description "Allow SQL" `
 #   -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 `
 #   -SourceAddressPrefix '10.0.1.0/24' -SourcePortRange * `
 #   -DestinationAddressPrefix * -DestinationPortRange 1433
 
 # Create an NSG rule to allow RDP traffic from the Internet to the back-end subnet.
-$rule2 = Si3-New-Rule 'Allow-RDP-All' 'Allow RDP' 200 '3389'
+$rule2 = Si3-New-Rule 'Allow-RDP-All' 'Allow RDP' 200 Internet '3389'
 # $rule2 = New-AzureRmNetworkSecurityRuleConfig -Name 'Allow-RDP-All' -Description "Allow RDP" `
 #   -Access Allow -Protocol Tcp -Direction Inbound -Priority 200 `
 #   -SourceAddressPrefix Internet -SourcePortRange * `

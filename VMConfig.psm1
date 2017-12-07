@@ -7,7 +7,7 @@ function Get-SQLVMConfiguration
 {
     $config = @{`
         VMName = 'MyVm-Sql'
-        VMSize = 'Standard_B1s'
+        VMSize = 'Standard_D8s_v3'
         VMOperatingSystem = "Windows"
         ComputerName = 'MyVm-Sql'
         PublisherName = 'MicrosoftSQLServer'

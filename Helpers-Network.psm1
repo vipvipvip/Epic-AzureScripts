@@ -19,6 +19,7 @@ function Si3-New-Rule {
         [string] $Name,
         [string] $Description,
         [int] $Priority,
+        [string] $SourceAddressPrefix,
         [string] $DestinationPortRange
     )
     if ($Name -eq ""  -or $Description -eq "" -or $DestinationPortRange -eq "")
@@ -28,7 +29,7 @@ function Si3-New-Rule {
 
     return New-AzureRmNetworkSecurityRuleConfig -Name $Name -Description $Description `
     -Access Allow -Protocol Tcp -Direction Inbound -Priority $Priority `
-    -SourceAddressPrefix Internet -SourcePortRange * `
+    -SourceAddressPrefix $SourceAddressPrefix -SourcePortRange * `
     -DestinationAddressPrefix * -DestinationPortRange $DestinationPortRange
 }
 
